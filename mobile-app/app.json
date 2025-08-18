@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "Youth Power App",
+    "slug": "youth-power-app",
+    "owner": "node8",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "runtimeVersion": { "policy": "nativeVersion" },
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "bundleIdentifier": "com.node8.youth.power.app",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "supportsTablet": false,
+      "config": { "usesNonExemptEncryption": false }
+    },
+    "android": {
+      "package": "com.node8.youth.power.app",
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": { "favicon": "./assets/favicon.png" },
+    "plugins": [
+      "@react-native-firebase/app",
+      "expo-tracking-transparency",
+      "expo-splash-screen",
+      "expo-updates",
+      ["expo-build-properties", { "ios": { "useFrameworks": "static" } }],
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+        }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.com.node8.youth.power.app"
+        }
+      ]
+    ],
+    "extra": { "eas": { "projectId": "f9cc95d8-28d8-4a29-864d-6b765feced8b" } }
+  }
+}

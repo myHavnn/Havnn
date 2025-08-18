@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "290385188673",
+    "firebase_url": "https://youth-power-app-default-rtdb.firebaseio.com",
+    "project_id": "youth-power-app",
+    "storage_bucket": "youth-power-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290385188673:android:0bd00e9adacaf2d92df3c0",
+        "android_client_info": {
+          "package_name": "com.node8.youth.power.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "290385188673-8f51r6c12224525l65k65p0hvk3ppu1q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.node8.youth.power.app",
+            "certificate_hash": "f171ed352bbeb748a83f860f61872103e8b44a6b"
+          }
+        },
+        {
+          "client_id": "290385188673-e7n5v7hr4rjeuj7kv3eb6klorjbpfgv5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwQEha3LIHJXV7qw6q1fSDtv27NU7cfw8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "290385188673-e7n5v7hr4rjeuj7kv3eb6klorjbpfgv5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "290385188673-29f4cvu5pe092as5aci4eefhlapviil0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.node8.youth.power.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
