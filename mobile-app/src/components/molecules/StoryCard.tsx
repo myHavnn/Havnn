@@ -1,15 +1,21 @@
-import { Text, TouchableOpacity, View } from "react-native";
-import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { Text, TouchableOpacity, View, Modal } from "react-native";
+import {
+  AntDesign,
+  Feather,
+  FontAwesome5,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { firestore, getCurrentUser } from "../../config/firebase";
 import EmojiSelector from "../organisms/EmojiSelector";
-import { getCount } from "../../utils";
+import { deleteDocAndKnownSubcollections, getCount } from "../../utils";
 import fonts from "../../utils/fonts";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import ThumbsUp from "../../../assets/blue_thumbsup.svg";
 import RedLove from "../../../assets/red_love.svg";
 import { formatDistance } from "date-fns";
+import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 
 const StoryCard = ({
   item,
@@ -22,6 +28,9 @@ const StoryCard = ({
   const navigation = useNavigation();
 
   const [newRun, setNewRun] = useState(new Date());
+  const [showOptionsModal, setShowOptionsModal] = useState(false);
+  const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
+  const dotsButtonRef = useRef<any>(null);
   const [counts, setCounts] = useState({
     comments: 0,
     likes: 0,
@@ -74,7 +83,7 @@ const StoryCard = ({
         setEmojiSelectorId(null);
       }}
     >
-      <View className="rounded text-black p-1 flex flex-row justify-start items-center">
+      <View className="rounded text-black flex flex-row justify-between items-center">
         <View className="flex flex-row justify-start items-center">
           <View className="flex flex-row justify-start items-center">
             <FontAwesome5 name="user-alt" size={15} color="black" />
@@ -86,6 +95,44 @@ const StoryCard = ({
             { addSuffix: true },
           )}`}</Text>
         </View>
+
+        {item?.uid === currentUser.uid && (
+          <TouchableOpacity
+            ref={dotsButtonRef}
+            onPress={() => {
+              if (dotsButtonRef.current) {
+                dotsButtonRef.current.measure(
+                  (
+                    x: number,
+                    y: number,
+                    width: number,
+                    height: number,
+                    pageX: number,
+                    pageY: number,
+                  ) => {
+                    setModalPosition({
+                      x: pageX - 120, // Offset to position modal to the left of the button
+                      y: pageY + height + 5, // Position below the button with some margin
+                    });
+                    setShowOptionsModal(true);
+                  },
+                );
+              }
+            }}
+            className="p-2"
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Text
+              style={{
+                color: "rgba(126, 228, 203, 1)",
+                fontSize: 16,
+                fontWeight: "bold",
+              }}
+            >
+              •••
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
       <Text
         className="mt-5 text-[16px]"
@@ -95,7 +142,7 @@ const StoryCard = ({
       >
         {post}
       </Text>
-      <View className="mt-4 flex flex-row gap-x-3 items-center justify-start ">
+      <View className="mt-4 flex flex-row gap-x-3 items-center justify-start">
         <View className="text-black flex flex-row items-center w-16 justify-center">
           <MaterialIcons name="chat" size={19} color="rgba(126, 228, 203, 1)" />
           <Text className="ml-1 text-appMain">{counts?.comments}</Text>
@@ -176,6 +223,110 @@ const StoryCard = ({
           </View>
         </View>
       </View>
+
+      {/* Options Modal */}
+      <Modal
+        visible={showOptionsModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowOptionsModal(false)}
+      >
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          }}
+          activeOpacity={1}
+          onPress={() => setShowOptionsModal(false)}
+        >
+          <View
+            style={{
+              position: "absolute",
+              top: modalPosition.y,
+              left: modalPosition.x,
+              backgroundColor: "#fff",
+              borderRadius: 12,
+              padding: 0,
+              width: 150,
+              overflow: "hidden",
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+          >
+            {/* Edit Option */}
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                padding: 16,
+                borderBottomWidth: 1,
+                borderBottomColor: "#f0f0f0",
+                justifyContent: "space-between",
+                // minWidth: 150,
+              }}
+              onPress={() => {
+                setShowOptionsModal(false);
+                navigation.navigate("Extra", {
+                  screen: "New Story",
+                  params: { item },
+                });
+                setEmojiSelectorId(null);
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: "#000",
+                  fontFamily: fonts.fontRegular,
+                }}
+              >
+                Edit
+              </Text>
+              <Feather name="edit-3" size={20} color="#000" style={{}} />
+            </TouchableOpacity>
+
+            {/* Delete Option */}
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                padding: 16,
+                justifyContent: "space-between",
+              }}
+              onPress={() => {
+                setShowOptionsModal(false);
+
+                deleteDocAndKnownSubcollections(
+                  firestore().collection("feed").doc(item?.id),
+                )
+                  .then(() => {
+                    setEmojiSelectorId(null);
+                  })
+                  .catch((error) => {
+                    console.error("Error deleting post:", error);
+                  });
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: "#EF4444",
+                  fontFamily: fonts.fontBold,
+                }}
+              >
+                Delete
+              </Text>
+              <AntDesign name="delete" size={20} color="#EF4444" style={{}} />
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </TouchableOpacity>
   );
 };

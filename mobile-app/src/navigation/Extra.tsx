@@ -1,6 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import screens from "../screens";
 import fonts from "../utils/fonts";
+import { View } from "react-native";
 
 const Stack = createStackNavigator();
 
@@ -75,6 +76,29 @@ const Extra = () => {
               fontFamily: fonts.fontBold,
               textAlign: "center",
             },
+          };
+        }}
+      />
+      <Stack.Screen
+        name="Account"
+        component={screens.Account}
+        options={({ route }) => {
+          return {
+            headerBackgroundContainerStyle: {
+              backgroundColor: "black",
+            },
+            headerStyle: {
+              backgroundColor: "black",
+            },
+            headerBackground: () => (
+              <View
+                style={{
+                  backgroundColor: "black",
+                }}
+              />
+            ),
+            headerBackTitleVisible: false,
+            headerTitle: "",
           };
         }}
       />

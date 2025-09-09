@@ -7,7 +7,11 @@ import {
   View,
 } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  Feather,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import fonts from "../utils/fonts";
@@ -134,6 +138,14 @@ const GetStarted = ({ navigation }) => {
           <Pressable
             className="relative"
             onPress={() => {
+              navigation.navigate("Extra", { screen: "Account" });
+            }}
+          >
+            <MaterialIcons name="account-circle" size={30} color="black" />
+          </Pressable>
+          {/* <Pressable
+            className="relative"
+            onPress={() => {
               firestore()
                 .collection("users")
                 .doc(user.uid)
@@ -147,8 +159,8 @@ const GetStarted = ({ navigation }) => {
                 <View className="bg-appMain rounded-full w-2 h-2" />
               </View>
             )}
-          </Pressable>
-          <Pressable
+          </Pressable> */}
+          {/* <Pressable
             className="mr-2"
             onPress={async () => {
               try {
@@ -164,7 +176,7 @@ const GetStarted = ({ navigation }) => {
             }}
           >
             <MaterialCommunityIcons name="logout" size={30} color="red" />
-          </Pressable>
+          </Pressable> */}
         </View>
       </View>
 

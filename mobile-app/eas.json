@@ -24,8 +24,7 @@
       }
     },
     "production": {
-      "channel": "production",
-      "ios": {}
+      "channel": "production"
     }
   },
   "submit": {
@@ -38,8 +37,15 @@
     },
     "production": {
       "android": {
+        "changesNotSentForReview": false,
         "track": "production",
         "releaseStatus": "completed"
+      },
+      "ios": {
+        "appleId": "Brian@nodeeight.org",
+        "ascAppId": "1590818516",
+        "appleTeamId": "Y3L8CUY432",
+        "metadataPath": "./store.config.js"
       }
     }
   }

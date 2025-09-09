@@ -1,5 +1,5 @@
 import { View, Pressable } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { firestore, getCurrentUser, newAuth } from "../../config/firebase";
@@ -16,7 +16,7 @@ const FeedTitleRight = () => {
   return (
     <View className="flex-row items-center justify-center gap-x-2">
       <Pressable
-        className="relative mr-4"
+        className="relative mr-1"
         onPress={async () => {
           await firestore().collection("users").doc(user.uid).update({
             hasNewNotification: false,
@@ -32,6 +32,14 @@ const FeedTitleRight = () => {
         )}
       </Pressable>
       <Pressable
+        className="relative mr-2"
+        onPress={() => {
+          navigation.navigate("Extra", { screen: "Account" });
+        }}
+      >
+        <MaterialIcons name="account-circle" size={20} color="black" />
+      </Pressable>
+      {/* <Pressable
         className="mr-2"
         onPress={async () => {
           try {
@@ -47,7 +55,7 @@ const FeedTitleRight = () => {
         }}
       >
         <MaterialCommunityIcons name="logout" size={20} color="red" />
-      </Pressable>
+      </Pressable> */}
     </View>
   );
 };

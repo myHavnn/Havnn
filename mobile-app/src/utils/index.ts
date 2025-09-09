@@ -3,6 +3,7 @@ import { Linking } from "react-native";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
+import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 
 export const getCount = async (query, key, set) => {
   const snapshot = await query.count().get();
@@ -101,4 +102,21 @@ export const linkCommonParams = {
     linkImage:
       "https://logo.com/image-cdn/images/kts928pd/production/3d0a1942ea617825e187c3c9a3811a5d93a331be-370x366.png?w=1080&q=72",
   },
+};
+
+export const deleteDocAndKnownSubcollections = async (
+  docRef: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>,
+) => {
+  // Delete comments
+  const commentsSnapshot = await docRef.collection("comments").get();
+  for (const commentDoc of commentsSnapshot.docs) {
+    await commentDoc.ref.delete();
+  }
+  // Delete likes
+  const likesSnapshot = await docRef.collection("likes").get();
+  for (const likeDoc of likesSnapshot.docs) {
+    await likeDoc.ref.delete();
+  }
+  // Delete the main document
+  await docRef.delete();
 };

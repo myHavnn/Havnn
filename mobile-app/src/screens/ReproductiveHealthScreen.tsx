@@ -9,7 +9,6 @@ const ReproductiveHealthScreen = ({ navigation }) => {
     <View
       className="flex-1 bg-white"
       style={{
-        padding: 20,
         paddingTop: 0,
       }}
     >
@@ -28,6 +27,7 @@ const ReproductiveHealthScreen = ({ navigation }) => {
             desc: "Music is a potent tool for stress reduction offering emotional release, distraction from worries, and physiological relaxation responses",
             image: require("../../assets/resources/music_1.png"),
             image2: require("../../assets/resources/music_2.png"),
+            statusColor: "rgba(251, 176, 171, 1)",
             onPress: () =>
               navigation.navigate("Extra", {
                 screen: "Link",
@@ -39,9 +39,10 @@ const ReproductiveHealthScreen = ({ navigation }) => {
           },
           {
             title: "Videos",
-            desc: "Engaging with visually pleasing or emotionally uplifting content can help individuals shift their focus away from stressors and promote a sense of calmness and well-being.",
+            desc: '"Get informed, stay empowered, watch these videos to understand and take charge of your reproductive health."',
             image: require("../../assets/resources/videos.png"),
             image2: require("../../assets/resources/videos_2.png"),
+            statusColor: "rgba(38, 45, 48, 1)",
             onPress: () =>
               navigation.navigate("Extra", {
                 screen: "Link",
@@ -53,9 +54,10 @@ const ReproductiveHealthScreen = ({ navigation }) => {
           },
           {
             title: "Blogs",
-            desc: "Reading blogs that focus on relaxation techniques, mindfulness practices, or personal experiences can offer readers practical strategies for managing stress and improving overall well-being.",
+            desc: '"Beat stress with practical tips from these blogs—read now and take back your peace of mind."',
             image: require("../../assets/resources/blogs.png"),
             image2: require("../../assets/resources/blogs_2.png"),
+            statusColor: "rgba(236, 194, 115, 1)",
             onPress: () =>
               navigation.navigate("Extra", {
                 screen: "Link",

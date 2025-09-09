@@ -9,7 +9,6 @@ const HeartbreakScreen = ({ navigation }) => {
     <View
       className="flex-1 bg-white"
       style={{
-        padding: 20,
         paddingTop: 0,
       }}
     >
@@ -25,9 +24,10 @@ const HeartbreakScreen = ({ navigation }) => {
         data={[
           {
             title: "Music",
-            desc: "Music is a potent tool for stress reduction offering emotional release, distraction from worries, and physiological relaxation responses",
+            desc: '"Heal your heart with these uplifting playlists—press play and start your journey to feeling whole again."',
             image: require("../../assets/resources/music_1.png"),
             image2: require("../../assets/resources/music_2.png"),
+            statusColor: "rgba(251, 176, 171, 1)",
             onPress: () =>
               navigation.navigate("Extra", {
                 screen: "Link",
@@ -41,7 +41,8 @@ const HeartbreakScreen = ({ navigation }) => {
             title: "Videos",
             image: require("../../assets/resources/videos.png"),
             image2: require("../../assets/resources/videos_2.png"),
-            desc: "Engaging with visually pleasing or emotionally uplifting content can help individuals shift their focus away from stressors and promote a sense of calmness and well-being.",
+            desc: '"Feeling lost? These videos are here to guide you through heartbreak and onto a brighter path. Start watching now."',
+            statusColor: "rgba(38, 45, 48, 1)",
             onPress: () =>
               navigation.navigate("Extra", {
                 screen: "Link",
@@ -55,7 +56,8 @@ const HeartbreakScreen = ({ navigation }) => {
             title: "Blogs",
             image: require("../../assets/resources/blogs.png"),
             image2: require("../../assets/resources/blogs_2.png"),
-            desc: "Reading blogs that focus on relaxation techniques, mindfulness practices, or personal experiences can offer readers practical strategies for managing stress and improving overall well-being.",
+            desc: '"These blogs are your roadmap to turning heartbreak into growth start reading and reclaim your happiness."',
+            statusColor: "rgba(236, 194, 115, 1)",
             onPress: () =>
               navigation.navigate("Extra", {
                 screen: "Link",

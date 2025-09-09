@@ -14,8 +14,10 @@ import { firestore, getCurrentUser } from "../config/firebase";
 import fonts from "../utils/fonts";
 import { Entypo } from "@expo/vector-icons";
 
-const NewStoryScreen = ({ navigation }) => {
-  const [text, setText] = useState("");
+const NewStoryScreen = ({ navigation, route }) => {
+  const post = route?.params?.item;
+
+  const [text, setText] = useState(post?.post ?? "");
   const [processing, setProcessing] = useState(false);
   const [step, setStep] = useState(1);
   const [postType, setPostType] = useState<null | string>(null);
@@ -30,19 +32,21 @@ const NewStoryScreen = ({ navigation }) => {
           await firestore().collection("users").doc(currentUser.uid).get()
         ).data();
 
-        const ref = firestore().collection("feed").doc();
-        await ref.set(
-          {
-            type: postType,
-            id: ref.id,
-            post: text,
-            uid: userData?.uid,
-            displayName: userData?.displayName,
-            timestamp: firestore.Timestamp.now(),
-            updated: firestore.Timestamp.now(),
-          },
-          { merge: true },
-        );
+        const ref = post?.id
+          ? firestore().collection("feed").doc(post.id)
+          : firestore().collection("feed").doc();
+
+        const postData = {
+          type: postType,
+          id: ref.id,
+          post: text,
+          uid: userData?.uid,
+          displayName: userData?.displayName,
+          ...(post?.id ? {} : { timestamp: firestore.Timestamp.now() }),
+          updated: firestore.Timestamp.now(),
+        };
+
+        await ref.set(postData, { merge: true });
         navigation.goBack();
       } catch (error) {
         console.log(error);

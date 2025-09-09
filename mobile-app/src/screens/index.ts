@@ -9,6 +9,7 @@ import CommentReplyScreen from "./CommentReplyScreen";
 import NotificationScreen from "./NotificationScreen";
 import LinkScreen from "./LinkScreen";
 import BookACounsellor from "./BookACounsellor";
+import AccountScreen from "./AccountScreen";
 
 const screens = {
   Feed: FeedScreen,
@@ -22,6 +23,7 @@ const screens = {
   Notifications: NotificationScreen,
   Link: LinkScreen,
   Book: BookACounsellor,
+  Account: AccountScreen,
 };
 
 export default screens;
