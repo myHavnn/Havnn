@@ -7,7 +7,10 @@ import { useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import { RootStackParamList } from "../models";
 import GetStarted from "./GetStarted";
-import { useNavigation } from "@react-navigation/native";
+import {
+  NavigationContainerRefWithCurrent,
+  useNavigation,
+} from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
 import { getNotificationToken, handleNotificationRouting } from "../utils";
 import { requestTrackingPermissionsAsync } from "expo-tracking-transparency";
@@ -34,7 +37,11 @@ const Loading = () => {
   );
 };
 
-export default function AppStack() {
+export default function AppStack({
+  navigationRef,
+}: {
+  navigationRef: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>;
+}) {
   const navigation = useNavigation();
   const [skipOnBoardingScreen, setSkipOnBoardingScreen] = useState<
     boolean | null
@@ -56,8 +63,10 @@ export default function AppStack() {
               { merge: true },
             );
           setSkipOnBoardingScreen(true);
-          navigation.navigate("Get Started");
-          setCheckNotification(true);
+          if (navigationRef.isReady()) {
+            navigationRef.navigate("Get Started");
+            setCheckNotification(true);
+          }
         } else {
           setSkipOnBoardingScreen(false);
           setCheckNotification(true);

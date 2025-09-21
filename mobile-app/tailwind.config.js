@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         appMain: "rgba(126, 228, 203, 1)",
+        appMain50: "rgba(126, 228, 203, 0.5)",
       },
     },
   },

@@ -1,9 +1,12 @@
 import {
+  Animated,
   Image,
   Pressable,
   ScrollView,
   Text,
+  TextInput,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { FlashList } from "@shopify/flash-list";
@@ -18,10 +21,72 @@ import fonts from "../utils/fonts";
 import { GetStartedData } from "../models";
 import { useApp } from "../context/AppContext";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { firestore, getCurrentUser, newAuth } from "../config/firebase";
-import { useRef } from "react";
+import {
+  firestore,
+  getCurrentUser,
+  newAuth,
+  newFirestore,
+} from "../config/firebase";
+import { useRef, useState, useEffect } from "react";
 import { signOut } from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { collection, doc, setDoc } from "@react-native-firebase/firestore";
+
+// Reusable Loading Spinner Component
+const LoadingSpinner = ({
+  size = 141,
+  color = "rgba(126, 228, 203, 1)",
+  onButtonPress,
+}: {
+  size?: number;
+  color?: string;
+  onButtonPress: (item: string) => void;
+}) => {
+  const spinValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(spinValue, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ).start();
+
+    setTimeout(() => {
+      onButtonPress("done");
+    }, 2000);
+  }, [spinValue]);
+
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+
+  return (
+    <View className="justify-center items-center">
+      <Animated.View
+        style={{
+          transform: [{ rotate: spin }],
+          width: size,
+          height: size,
+        }}
+      >
+        <View
+          style={{
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            borderWidth: 15,
+            borderColor: "rgba(126, 228, 203, 0.25)",
+            borderTopColor: color,
+            borderRightColor: color,
+          }}
+        />
+      </Animated.View>
+    </View>
+  );
+};
 
 const RenderItem = ({ item }: { item: GetStartedData }) => {
   const navigation = useNavigation();
@@ -120,13 +185,242 @@ const DATA = ({
       navigation.navigate("Main", { screen: "Reproductive" }),
   },
 ];
+
+// Reusable Welcome Card Component
+const WelcomeCard = ({
+  title,
+  onButtonPress,
+  render,
+}: {
+  title: string;
+  onButtonPress: (item: string) => void;
+  render: ({
+    title,
+    onButtonPress,
+  }: {
+    title: string;
+    onButtonPress: (item: string) => void;
+  }) => React.ReactNode;
+}) => {
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
+  const imageAnimatedStyle = {
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  };
+
+  return (
+    <ScrollView className="relative flex-1">
+      <Image
+        source={require("../../assets/onboarding/6.png")}
+        style={imageAnimatedStyle}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          backgroundColor: "rgba(56, 107, 94, 0.85)",
+        }}
+      >
+        <View className="flex justify-around items-center h-full">
+          {render({
+            title,
+            onButtonPress,
+          })}
+          <Text
+            className="text-[15px] text-white text-center"
+            style={{ fontFamily: fonts.fontRegular }}
+          >
+            No one will see this information
+          </Text>
+        </View>
+      </View>
+    </ScrollView>
+  );
+};
+
 const GetStarted = ({ navigation }) => {
   const { changeFeedSelected } = useApp();
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [step, setStep] = useState(1);
+
   const currentUser = getCurrentUser();
   const [user] = useDocumentData(
     firestore().collection("users").doc(currentUser.uid),
   );
-  const scrollViewRef = useRef<ScrollView>(null);
+  const isNewUser = user?.isNewUser;
+
+  if (!user) return null;
+
+  if (isNewUser) {
+    return (
+      <>
+        {step === 1 && (
+          <WelcomeCard
+            {...{
+              title: "To which gender do you most identify",
+              onButtonPress: async (gender: string) => {
+                await setDoc(
+                  doc(collection(newFirestore, "users"), currentUser.uid),
+                  {
+                    gender,
+                  },
+                  { merge: true },
+                );
+                setStep(2);
+              },
+              render: ({ title, onButtonPress }) => {
+                return (
+                  <View className="w-11/12">
+                    <Text
+                      className="text-[28px] mt-3 text-white text-center"
+                      style={{ fontFamily: fonts.fontExtraBold }}
+                    >
+                      {title}
+                    </Text>
+
+                    <View className="mt-20 flex flex-row justify-around items-center">
+                      <TouchableOpacity
+                        onPress={() => {
+                          onButtonPress("Female");
+                        }}
+                      >
+                        <View className="w-[111px] h-[113px] bg-appMain50 border-appMain border-4 rounded-2xl justify-center items-center">
+                          <Text
+                            className="text-[25px] text-white"
+                            style={{ fontFamily: fonts.fontBold }}
+                          >
+                            Female
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => {
+                          onButtonPress("Male");
+                        }}
+                      >
+                        <View className="w-[111px] h-[113px] bg-appMain50 border-appMain border-4 rounded-2xl justify-center items-center">
+                          <Text
+                            className="text-[25px] text-white"
+                            style={{ fontFamily: fonts.fontBold }}
+                          >
+                            Male
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              },
+            }}
+          />
+        )}
+
+        {step === 2 && (
+          <WelcomeCard
+            {...{
+              title: "What’s your age?",
+              onButtonPress: async (age: string) => {
+                if (age) {
+                  await setDoc(
+                    doc(collection(newFirestore, "users"), currentUser.uid),
+                    {
+                      age,
+                    },
+                    { merge: true },
+                  );
+                  setStep(3);
+                }
+              },
+              render: ({ title, onButtonPress }) => {
+                const inputRef = useRef(null);
+                return (
+                  <View className="w-11/12">
+                    <Text
+                      className="text-[28px] mt-3 text-white text-center"
+                      style={{ fontFamily: fonts.fontExtraBold }}
+                    >
+                      {title}
+                    </Text>
+
+                    <View className="mt-10 flex flex-row justify-around items-center">
+                      <TextInput
+                        ref={inputRef}
+                        keyboardType="numeric"
+                        className="text-white text-center text-[40px] w-11/12 bg-appMain50 border-appMain border-4 rounded-2xl justify-center items-center h-[75px]"
+                        style={{
+                          fontFamily: fonts.fontBold,
+                        }}
+                        onChangeText={(e) => (inputRef.current.value = e)} // Store the value in the ref
+                      />
+                    </View>
+                    <Text
+                      className="text-[18px] text-white text-center mt-16"
+                      style={{ fontFamily: fonts.fontSemiBold }}
+                    >
+                      I confirm that my age is correct
+                    </Text>
+
+                    <TouchableOpacity
+                      className="flex justify-center items-center w-full mt-4"
+                      onPress={() => {
+                        onButtonPress(inputRef?.current?.value);
+                      }}
+                    >
+                      <View className="w-7/12 h-[36px] bg-transparent border-appMain border-2 rounded-2xl justify-center items-center">
+                        <Text
+                          className="text-white text-[15px]"
+                          style={{ fontFamily: fonts.fontSemiBold }}
+                        >
+                          Next
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                );
+              },
+            }}
+          />
+        )}
+
+        {step === 3 && (
+          <WelcomeCard
+            {...{
+              title: "Welcome to Havnn",
+              onButtonPress: async () => {
+                await setDoc(
+                  doc(collection(newFirestore, "users"), currentUser.uid),
+                  {
+                    isNewUser: false,
+                  },
+                  { merge: true },
+                );
+                setStep(1);
+              },
+              render: ({ title, onButtonPress }) => {
+                return (
+                  <View className="w-11/12">
+                    <Text
+                      className="text-[28px] mt-3 text-white text-center"
+                      style={{ fontFamily: fonts.fontExtraBold }}
+                    >
+                      {title}
+                    </Text>
+
+                    <View className="mt-28 flex flex-row justify-around items-center">
+                      <LoadingSpinner {...{ onButtonPress }} />
+                    </View>
+                  </View>
+                );
+              },
+            }}
+          />
+        )}
+      </>
+    );
+  }
 
   return (
     <ScrollView ref={scrollViewRef} className="flex-1 p-5">

@@ -15,7 +15,7 @@ const Routes = () => {
         routeNameRef.current = navigationRef.getCurrentRoute()?.name;
       }}
     >
-      <AppStack />
+      <AppStack {...{ navigationRef }} />
     </NavigationContainer>
   );
 };

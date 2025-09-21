@@ -310,6 +310,7 @@ const Onboarding = () => {
         {
           uid: userCredential.user.uid,
           email: userCredential.user.email || "",
+          isNewUser: userCredential.additionalUserInfo?.isNewUser || false,
           ...(userCredential.additionalUserInfo?.isNewUser
             ? {
                 createdAt: Timestamp.now(),
