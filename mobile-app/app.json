@@ -3,22 +3,29 @@
     "name": "Youth Power App",
     "slug": "youth-power-app",
     "owner": "node8",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "runtimeVersion": { "policy": "nativeVersion" },
+    "runtimeVersion": {
+      "policy": "nativeVersion"
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "bundleIdentifier": "com.node8.youth.power.app",
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": false,
-      "config": { "usesNonExemptEncryption": false }
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "buildNumber": "1.0.1"
     },
     "android": {
       "package": "com.node8.youth.power.app",
@@ -26,15 +33,25 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "versionCode": 530010001
     },
-    "web": { "favicon": "./assets/favicon.png" },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
     "plugins": [
       "@react-native-firebase/app",
       "expo-tracking-transparency",
       "expo-splash-screen",
       "expo-updates",
-      ["expo-build-properties", { "ios": { "useFrameworks": "static" } }],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ],
       [
         "expo-secure-store",
         {
@@ -49,6 +66,10 @@
         }
       ]
     ],
-    "extra": { "eas": { "projectId": "f9cc95d8-28d8-4a29-864d-6b765feced8b" } }
+    "extra": {
+      "eas": {
+        "projectId": "f9cc95d8-28d8-4a29-864d-6b765feced8b"
+      }
+    }
   }
 }
