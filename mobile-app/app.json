@@ -15,9 +15,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.node8.youth.power.app",
       "googleServicesFile": "./GoogleService-Info.plist",
@@ -42,7 +40,7 @@
     "plugins": [
       "@react-native-firebase/app",
       "expo-tracking-transparency",
-      "expo-splash-screen",
+      ["expo-splash-screen"],
       "expo-updates",
       [
         "expo-build-properties",

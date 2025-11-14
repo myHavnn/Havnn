@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import { LogBox, SafeAreaView } from "react-native";
+import { ImageBackground, LogBox, SafeAreaView } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useCallback, useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
@@ -83,16 +83,13 @@ export default function App() {
     }
   }, [isLoadingComplete]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoadingComplete(true);
-    }, 1000);
-
-    return () => {};
-  }, []);
-
   if (!isLoadingComplete) {
-    return null;
+    return (
+      <ImageBackground
+        source={require("./assets/splash.png")}
+        style={{ flex: 1 }}
+      />
+    );
   }
 
   return (

@@ -4,7 +4,7 @@ import Extra from "./Extra";
 import Onboarding from "./Onboarding";
 import { useEffect, useState } from "react";
 
-import { Image, View } from "react-native";
+import { Image, ImageBackground, View } from "react-native";
 import { RootStackParamList } from "../models";
 import GetStarted from "./GetStarted";
 import {
@@ -31,9 +31,10 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const Loading = () => {
   return (
-    <View className="items-center justify-center flex-1">
-      <Image source={require("../../assets/splash.png")} />
-    </View>
+    <ImageBackground
+      source={require("../../assets/splash.png")}
+      style={{ flex: 1 }}
+    />
   );
 };
 
